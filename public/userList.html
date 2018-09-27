@@ -65,7 +65,7 @@
                                             <i class="el-icon-edit"></i>
                                             编辑
                                         </el-button>
-                                        <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
+                                        <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">
                                             <i class="el-icon-delete"></i>
                                             删除
                                         </el-button>
@@ -115,8 +115,23 @@
                         _this.tableData = data
                     })
                 },
-            
-
+                // 执行删除数据
+                handleDelete(id){
+                    // 保留this指向
+                    var _this=this;
+                    // 发送ajax请求，删除一条用户数据
+                    $.get(`/users/userDelete?id=${id}`,function(data){  // 发送一个参数id给后台
+                        if(data.errcode === 1){
+                            // 弹出删除成功
+                            alert(data.msg);
+                            // 刷新数据
+                            _this.getAllData()
+                        }else{
+                            // 弹出删除失败
+                            alert(data.msg);
+                        }
+                    })
+                },
 
 
 
