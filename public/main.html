@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>华联超市管理系统-系统管理</title>
+    <!-- 引入element.min.css -->
+    <link rel="stylesheet" href="./libs/elementui/css/elementui.min.css">
+    <!-- 引入页面main.css -->
+    <link rel="stylesheet" href="./css/index.css">
+    <!-- 引入vue.min.js-->
+    <script src="./libs/vue/vue.min.js"></script>
+    <!-- 引入element.min.js -->
+    <script src="./libs/elementui/js/elementui.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+            <!-- 右部页面主体 -->
+            <el-container>
+                <!-- 主体header -->
+                <el-header>
+                    <h2>欢迎您 admin</h2>
+                    <p>查看详细的系统信息。</p>
+                </el-header>
+                <!-- 主体main -->
+                <el-main>
+                    <el-card class="box-card">
+                        <!-- 主体main的header -->
+                        <div slot="header" class="clearfix">
+                            <span>系统信息</span>
+                        </div>
+                        <!-- 主体main的main -->
+                        <div class="text item">
+                            <el-alert title="成功提示的文案" type="success">
+                            </el-alert>
+                            <el-alert title="消息提示的文案" type="info">
+                            </el-alert>
+                            <el-row :gutter="24">
+                                <el-col :span="12">
+                                    <div class="grid-content bg-purple">
+                                        <el-card class="box-card">
+                                            <!-- 主体main的header -->
+                                            <div slot="header" class="clearfix">
+                                                <span>销售排行</span>
+                                            </div>
+                                            <div class="text item">
+                                                <el-table  :data="tableData3" style="width: 100%" >
+                                                    <el-table-column type="selection" width="55">
+                                                    </el-table-column>
+                                                    <el-table-column label="日期" width="120">
+                                                        <template slot-scope="scope">{{ scope.row.date }}</template>
+                                                    </el-table-column>
+                                                    <el-table-column prop="name" label="姓名" width="120">
+                                                    </el-table-column>
+                                                    <el-table-column prop="address" label="地址" show-overflow-tooltip>
+                                                    </el-table-column>
+                                                </el-table>
+                                            </div>
+                                        </el-card>
+                                    </div>
+                                </el-col>
+                                <el-col :span="12">
+                                    <div class="grid-content bg-purple">
+                                        <el-card class="box-card">
+                                            <!-- 主体main的header -->
+                                            <div slot="header" class="clearfix">
+                                                <span>销售排行</span>
+                                            </div>
+                                            <div class="text item">
+                                                <el-table  :data="tableData3" style="width: 100%" >
+                                                    <el-table-column type="selection" width="55">
+                                                    </el-table-column>
+                                                    <el-table-column label="日期" width="120">
+                                                        <template slot-scope="scope">{{ scope.row.date }}</template>
+                                                    </el-table-column>
+                                                    <el-table-column prop="name" label="姓名" width="120">
+                                                    </el-table-column>
+                                                    <el-table-column prop="address" label="地址" show-overflow-tooltip>
+                                                    </el-table-column>
+                                                </el-table>
+                                            </div>
+                                        </el-card>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </el-card>
+                </el-main>
+                <el-footer>
+                    <p class="copyright">&copy;Copyright 2018 华联超市管理系统</p>
+                </el-footer>
+            </el-container>
+        </el-container>
+    </div>
+    <script>
+        // 创建实例
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    tableData3: [{
+                        date: '2016-05-03',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-02',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-04',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }, {
+                        date: '2016-05-01',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    }],
+                    multipleSelection: []
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,161 @@
+/* 组件自己的css样式 */
+.el-header, .el-footer {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+}
+  
+.el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align: center;
+}
+  
+.el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+}
+  
+body > .el-container {
+    margin-bottom: 40px;
+}
+  
+
+/* 自己编写的样式 */
+html,body{
+    padding: 0;
+    margin:0;
+    height: 100%;
+}
+#app,.el-container{
+    height: 100%;
+}
+.el-aside{
+    background-image: url(../img/left_bg.png);
+    color:#ccc;
+}
+/* 左端头部 */
+.el-aside .title{
+    padding-right: 20px;
+    text-align: right;
+}
+.el-aside .title h2{
+    line-height: 60px;
+}
+.el-aside .title p{
+    font-size: 12px;
+}
+.el-aside .title p a{
+    color: #ccc;
+    text-decoration: none;
+    padding: 0 2px;
+}
+.el-aside .title p a:hover{
+    color: green;
+}
+/* 左端导航栏 */
+.el-menu-vertical-demo,.el-menu-item-group{
+    background-color:transparent;
+    color: #fff;
+}
+.el-submenu{
+    margin-bottom: 10px;
+    color: #fff;
+}
+.el-submenu__title{
+    color: #fff;
+    height: 33px;
+    line-height: 33px;
+    background-image: url(../img/menu_bg.png);
+    padding-right: 50px;
+    margin-left: 30px;
+    border-radius: 4px 0 0 4px;
+    text-align: right;
+}
+.el-submenu__title i{
+    color: #ccc;
+}
+.el-menu{
+    background-color:transparent;
+    border: none;
+    color: #fff;
+}
+.el-submenu .el-menu-item {
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+}
+.el-submenu .el-menu-item {
+    padding: 0;
+}
+.el-submenu .el-menu-item a{
+    text-decoration: none;
+    color: #fff;
+}
+.el-submenu .el-menu-item a:hover,.el-menu-item.is-active a{
+    color: greenyellow;
+}
+.el-menu-item-group .el-menu-item.is-active {
+    background-color:transparent;
+    color: greenyellow;
+}
+.el-menu-item-group .el-menu-item:hover {
+    background-color: transparent;
+    color: #ccc;
+}
+
+/* 右部页面主体 */
+
+/* 右部header */
+.el-header, .el-footer{
+    padding-top: 20px;
+    background-color: transparent;
+    height: 80px!important;
+    line-height: normal;
+    text-align: left;
+}
+.el-header h2,.el-header p{
+    padding: 0;
+    margin: 0; 
+}
+/* 右部main */
+.el-main{
+    background-color: transparent;
+}
+/* 卡片组件样式css */
+.text {
+    font-size: 14px;
+  }
+
+  .item {
+    margin-bottom: 18px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+/* main头部 */
+.el-card__header{
+    padding:10px 20px;
+    background-color: #B3C0D1;
+    font-size:20px;
+    color: #000;
+    font-weight: bold;
+    text-align: left;
+}
+/* main的主体 */
+.el-alert{
+    margin-bottom: 10px;
+}
+.copyright{
+    border-top: 1px solid #ccc;
+    padding: 20px 0;
+    margin: 0;
+}

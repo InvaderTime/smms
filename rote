@@ -1,0 +1,233 @@
+项目目标：
+    1）熟练掌握ajax的使用 （*****）
+    2）熟悉前后端数据交互（***）
+    3）熟悉elementui 框架的使用（***）
+    4）熟悉vue的简单使用（***）
+    5）了解后端增删改查的逻辑
+    6）对整个项目的前后端结构和逻辑都有一个认识。
+
+    难点： 分页（后端） 模糊查询（后端）
+
+
+DAY01需求：
+    A 搭建项目环境
+        1 使用express搭建项目环境
+            express smms -e
+
+        2 进入项目根目录 一次性安装所有依赖
+            cnpm i 
+
+        3 监听端口 启动服务器
+            a) 打开app.js文件  
+                app.listen(666, () => {
+                    console.log('服务器启动成功...端口：666')
+                })
+
+            b） 启动服务器
+                nodemon app
+
+    
+    B 前端资源文件都放入public， 集成elementui和vue.js
+        1 搭建前端目录结构,准备资源文件
+            images: 图片
+            js： 脚本
+            styles： 样式
+            libs：第三方库
+                elementui: 
+                    css: 样式文件
+                    fonts: 字体文件（css需要引用它,注意路径！）
+                    js:  js脚本（依赖vue.js）
+
+                vue:  vue.min.js
+
+                jquery: jquery.min.js
+
+        2 新建一个测试页面 测试环境是否搭建成功
+            注意： 主要测试elementui是否可以使用。
+    C 登录页面的布局实现
+        1 登录页面表单
+        2 水平和垂直居中
+            1） 子绝父相
+            2） left right top bottom  都设置为0
+            3） margin： auto
+
+    D 表单的基本验证：
+        1 data里面有两份数据
+            1） 双向数据绑定 主要用来取值
+                loginForm: {  
+                    username: '',  // 用户名
+                    password: '',  // 密码
+                    confirmPassword: '' // 确认密码
+                }
+            2） 验证规则的数据
+                  rules: {
+                        // 验证用户名
+                        username: [
+                            {required: true, message: '请输入用户名', trigger: 'blur'}, // 非空验证
+                            {min: 5, max: 12, message: '用户名长度在 5 到 12 个字符', trigger: 'blur'} // 长度验证
+                        ],
+                        // 验证密码
+                        password: [
+                            {required: true, message: '请输入密码', trigger: 'blur'}, // 非空验证
+                            {min: 6, max: 12, message: '密码长度在 6 到 12 个字符', trigger: 'blur'} // 长度验证
+                        ],
+                        // 验证确认密码 (自定义验证规则)
+                        confirmPassword: [
+                            { validator: checkPass, trigger: 'blur' }  // 自定义验证函数
+                        ],
+                    }
+                说明：
+                    在return之前 自己写的验证函数
+                    let 验证函数的名字 = (rules, value, callback) => {
+                        // 对value判断
+                        if (value === '') {
+                            // 给出提示信息 输入框边框变红色 有一个 x
+                            callback(new Error('不能为空'))
+                        } else if (value.length < 6 || value.length > 18) {
+                             // 给出提示信息 输入框边框变红色 有一个 x
+                            callback(new Error('长度必须在6 - 18 位之间'))
+                        } else {
+                            // 成功 输入框边框变绿色 有一个√
+                            callback()
+                        }
+                    }
+
+                    rules: {
+                        要验证的字段: [
+                            {required: true, message: '提示信息', trigger: '触发方式'},   // 非空验证
+                            {min: 5, max: 12, message:'提示信息', trigger: '触发方式'},   // 长度验证
+                            {validator: 自己写的验证函数的名字, trigger: '触发方式'}
+                        ]
+                    }
+
+        2 提交表单方法
+            submitForm(formName) {
+                // $refs能够把用 ref属性声明的dom 都收集在一个对象里面
+                this.$refs[formName].validate((valid) => {
+                    // 如果valid是true 证明整个表单前端验证全部通过 允许发送给后端了
+                    if (valid) {
+                        // 收集用户输入的用户名和密码
+                        let username = this.loginForm.username;
+                        let password = this.loginForm.password;
+
+                        // 构造ajax 把用户名和密码发送给后端（等待 后端去数据库查询存不存在）
+                    } else {
+                        // valid是false 证明前端验证没有通过 不允许提交表单 不允许发给后端
+                        console.log('error submit')
+                        return false;
+                    }
+                })
+            }
+        3 重置表单：
+            resetForm(formName) {
+                // 获取整个表单 调用重置方法
+                this.$refs[formName].resetFields();  // this.$refs[formName] ==> this.$refs.loginForm
+            }
+    E 后台首页页面的实现
+    D 添加账号页面的实现
+    F 用户列表页面的实现
+
+DAY02:
+    准备工作：
+        1 数据库设计：
+            数据库名字： admin
+            表的名字： users
+            创建  用户账号 表：
+                create table `users` (
+                    id int primary key auto_increment,
+                    username varchar(50),
+                    password varchar(32),
+                    groups varchar(50),
+                    ctime TIMESTAMP  default CURRENT_TIMESTAMP
+                );
+
+        2 nodejs连接mysql数据库?
+            1）下载mysql模块
+                cnpm i mysql --save
+
+            2) 引入mysql模块
+                const mysql = require('mysql');
+
+            3) 创建连接
+                const connection = mysql.createConnection({
+                    host     : 'localhost',  // 主机名
+                    user     : 'root',   // 用户名
+                    password : 'root', // 密码
+                    database : 'admin'  // 数据库的名字
+                })
+
+            4) 调用连接方法
+                connection.connect();
+
+        3）nodejs操作数据库
+            a) 定义sql语句
+                const sqlStr = 'sql语句';
+
+            b) 执行数据库操作
+                connection.query(sqlStr, (err, data) => {
+                    if (err) {
+                        throw err
+                    } else {
+                        // 根据data的各种情况判断
+                    }
+                })
+
+
+
+    A 创建git共享仓库 
+    B 公共导航的抽取
+        iframe 标签
+        <iframe name="iframe的名称" src="引入的需要在这个标签里面显示的页面url" width="宽度" height="高度">
+            // src引入的页面  会在这里显示
+        </iframe>
+
+    C) 添加账号功能实现 (***)
+        1 前端-填写表单，点击添加按钮 发送ajax给后端（把用户账号的数据发送给后端）
+            a) 用户填写表单 通过所有的前端验证 收集表单的数据（双向绑定）
+            b) 把这些数据 通过ajax的post方式，发送给后端
+
+        2 后端-接收请求，接收数据
+            a) get方式使用 req.query  post方式使用req.body 
+            
+        3 后端-把数据的数据 存入数据库
+            a) 构造sql语句（插入数据的sql）
+                const sqlStr "sql的增删改查的语法"
+            b) 执行sql语句  
+                connection.query(sqlStr, (err, data) => {   })
+
+        4 后端-根据存入数据库的结果 返回给前端一些信息
+              成功：res.send({"errcode":1, "msg":"添加成功"})
+              失败：res.send({"errcode":0, "msg":"添加失败"})
+
+        5 前端-根据后端返回的信息 判断 
+            成功：》》弹 出添加成功  》》跳 转到账号列表 
+            失败：弹出添加失败，呵呵！
+
+    D) 用户列表功能的实现 (***)
+        1 前端-在生命周期 created 里面 发送ajax 去请求所有用户列表的数据
+        2 后端-接收这个请求
+        3 后端-构造sql语句 去数据库查询所有数据
+        4 后端-根据查询结果判断
+            如果有错 抛出错误
+            否则 直接把查询的所有数据响应给前端
+        5 前端-接收到后端返回的所有数据，赋值给tableData, 触发页面表格渲染
+            a）注意： 需要保留this的指向  ajax里面的this不指向vue实例了。
+
+    E) 用户删除功能的实现（***）
+        1 前端-点击删除按钮 触发一个函数 把 id 传入
+        2 前端-在这个函数里面 发送一个删除的请求 把 id 传给后端
+        3 后端-接收这个请求，接收id
+        4 后端-构造sql，以id为条件 执行删除
+            a）const sqlStr = 'delete from users where id=10'
+        5 后端-执行sql语句（单条删除操作）  
+            a）如果有错 抛出错误
+            b）如果没有错 根据结果判断
+                i) 如果受影响的行数 > 0, 返回给前端一些信息（删除成功的信息）
+                    res.send({"errcode":1, "msg":"删除成功！"})
+
+                ii) 否则 返回给前端一些信息（删除失败的信息）
+                    res.send({"errcode":0, "msg":"删除失败！"})
+
+        6 前端-接收后端返回的数据，判断
+            a) 如果成功  》》弹 出删除成功  》》刷 新页面
+            b) 如果失败  弹出删除失败
