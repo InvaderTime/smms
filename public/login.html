@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="./libs/elementui/css/elementui.min.css">
     <!-- 引入页面main.css -->
     <link rel="stylesheet" href="./css/main.css">
+    <!-- 引入jquery.min.js -->
+    <script src="./libs/jquery/jquery.min.js"></script>
     <!-- 引入vue.min.js-->
     <script src="./libs/vue/vue.min.js"></script>
     <!-- 引入element.min.js -->
@@ -81,7 +83,20 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            alert('前端验证通过!可以发给后端!');
+                            let userInfor = {
+                                username: this.loginForm.username,
+                                password: this.loginForm.password
+                            };
+                            // 发送ajax请求，验证用户名和密码是否正确
+                            $.post('/users/userLogin', userInfor, function (data) {
+                                if (data.errcode === 1) {
+                                    alert(data.msg);
+                                    location.href = './index.html'
+                                } else {
+                                    // 否则 弹出失败提示
+                                    alert(data.msg)
+                                }
+                            })
                         } else {
                             console.log('前端验证失败 不允许提交!');
                             return false;

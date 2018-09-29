@@ -26,39 +26,35 @@
                 <!-- 主体header -->
                 <el-header>
                     <h2>欢迎您 admin</h2>
-                    <p>查看详细的系统信息。</p>
+                    <p>更改用户账号</p>
                 </el-header>
                 <!-- 主体main -->
                 <el-main style="width:600px">
                     <el-card class="box-card">
                         <!-- 主体main的header -->
                         <div slot="header" class="clearfix">
-                            <span>系统信息</span>
+                            <span>用户信息</span>
                         </div>
                         <!-- 主体main的main -->
                         <div class="text item">
                             <div slot="header" class="clearfix">
-                                <span>添加管理员账号</span>
+                                <span>更改管理员账号</span>
                             </div>
                             <div class="text item">
                                 <!-- 添加账号的表单 -->
-                                <el-form :model="loginForm" class="addUserForm" status-icon :rules="rules" ref="loginForm"
+                                <el-form :model="editForm" class="addUserForm" status-icon :rules="rules" ref="editForm"
                                     label-width="100px" class="demo-ruleForm">
                                     <!-- 用户名 -->
                                     <el-form-item label="用户名" prop="username">
-                                        <el-input type="text" v-model="loginForm.username" autocomplete="off"></el-input>
+                                        <el-input type="text" v-model="editForm.username" autocomplete="off"></el-input>
                                     </el-form-item>
                                     <!-- 密码 -->
                                     <el-form-item label="密&emsp;码" prop="password">
-                                        <el-input type="text" v-model="loginForm.password" autocomplete="off"></el-input>
-                                    </el-form-item>
-                                    <!-- 确认密码 -->
-                                    <el-form-item label="确认密码" prop="confirmPassword">
-                                        <el-input v-model="loginForm.confirmPassword"></el-input>
+                                        <el-input type="text" v-model="editForm.password" autocomplete="off"></el-input>
                                     </el-form-item>
                                     <!-- 选择用户组 -->
                                     <el-form-item label="选择用户组" prop="groups">
-                                        <el-select v-model="loginForm.groups" placeholder="请选择用户组">
+                                        <el-select v-model="editForm.groups" placeholder="请选择用户组">
                                             <el-option label="普通用户" value="普通用户"></el-option>
                                             <el-option label="超级管理员" value="超级管理员"></el-option>
                                         </el-select>
@@ -66,8 +62,8 @@
 
                                     <!-- 登录&重置 -->
                                     <el-form-item>
-                                        <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
-                                        <el-button @click="resetForm('loginForm')">重置</el-button>
+                                        <el-button type="primary" @click="submitForm('editForm')">修改</el-button>
+                                        <el-button @click="resetForm('editForm')">重置</el-button>
                                     </el-form-item>
                                 </el-form>
 
@@ -91,18 +87,17 @@
                     // 判断密码是否存在
                     if (value === "") {
                         callback(new Error("请输入密码"))
-                    } else if (value != this.loginForm.password) {
+                    } else if (value != this.editForm.password) {
                         callback(new Error("两次输入的密码不一致"))
                     } else {
                         callback();
                     }
                 }
                 return {
-                    loginForm: {
+                    editForm: {
                         username: "",
                         password: "",
-                        confirmPassword: "",
-                        groups:""
+                        groups: ""
                     },
                     rules: {
                         username: [
@@ -116,28 +111,40 @@
                         confirmPassword: [
                             { validator: checkPass, trigger: 'blur' }
                         ],
-                        groups:[
-                            {required:true,message:"请选择组别",trigger:'change'}
+                        groups: [
+                            { required: true, message: "请选择组别", trigger: 'change' }
                         ]
                     }
                 };
+            },
+            // 生命周期钩子函数
+            created() {
+                // 保留this指向
+                var _this = this;
+                // 获取传来的id
+                let id = location.href.split('=')[1];
+                // 发送ajax请求，通过id查询数据
+                $.get(`/users/userEdit?id=${id}`, function (data) {
+                    _this.editForm.username = data[0].username;
+                    _this.editForm.password = data[0].password;
+                    _this.editForm.groups = data[0].groups;
+                })
             },
             methods: {
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            // 定义参数对象
-                            const params ={
-                                username:this.loginForm.username,
-                                password:this.loginForm.password,
-                                groups:this.loginForm.groups
+                            const params = {
+                                username: this.editForm.username,
+                                password: this.editForm.password,
+                                groups: this.editForm.groups,
+                                id: location.href.split('=')[1]
                             }
-                            // 发送用户数据给后台
-                            $.post('/users/userAdd',params,function(data){
-                                // 发送成功  弹出对应的提示信息
-                                if(data.errcode===1){
+                            // 发送ajax请求，保存数据到数据库
+                            $.get('/users/userSave',params,function(data){
+                                if(data.errcode === 1){
                                     alert(data.msg);
-                                    location.href="./userList.html";
+                                    location.href = './userList.html'
                                 }else{
                                     alert(data.msg)
                                 }

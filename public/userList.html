@@ -61,7 +61,7 @@
                                 <!-- 操作 -->
                                 <el-table-column label="操作">
                                     <template slot-scope="scope">
-                                        <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
+                                        <el-button size="mini" type="primary" @click="handleEdit(scope.row.id)">
                                             <i class="el-icon-edit"></i>
                                             编辑
                                         </el-button>
@@ -73,11 +73,10 @@
                                 </el-table-column>
 
                             </el-table>
-                            <!-- <div style="margin-top: 20px">
-                                <el-button @click="toggleSelection([tableData3[1], tableData3[2]])">切换第二、第三行的选中状态</el-button>
-                                <el-button @click="toggleSelection()">取消选择</el-button>
-                            </div> -->
-
+                            <div style="margin-top: 20px">
+                                <el-button @click="selectDelete()">批量删除</el-button>
+                                <el-button @click="selectCancel()">取消选择</el-button>
+                            </div>
                         </div>
                     </el-card>
                 </el-main>
@@ -102,57 +101,83 @@
                 }
             },
             // vue实例创建完毕 没有挂载dom 适合准备数据(发送ajax 获取数据)
-            created(){
+            created() {
                 // 调用一次请求所有数据的方法
                 this.getAllData()
             },
             methods: {
-                getAllData(){
+                getAllData() {
                     // 保留this指向
-                    var _this=this;
+                    var _this = this;
                     // 发送ajax请求，获取所有数据
-                    $.get('/users/userList',function(data){
+                    $.get('/users/userList', function (data) {
                         _this.tableData = data
                     })
                 },
+                
                 // 执行删除数据
-                handleDelete(id){
+                handleDelete(id) {
                     // 保留this指向
-                    var _this=this;
+                    var _this = this;
                     // 发送ajax请求，删除一条用户数据
-                    $.get(`/users/userDelete?id=${id}`,function(data){  // 发送一个参数id给后台
-                        if(data.errcode === 1){
+                    $.get(`/users/userDelete?id=${id}`, function (data) {  // 发送一个参数id给后台
+                        if (data.errcode === 1) {
                             // 弹出删除成功
                             alert(data.msg);
                             // 刷新数据
                             _this.getAllData()
-                        }else{
+                        } else {
                             // 弹出删除失败
                             alert(data.msg);
                         }
                     })
                 },
-
-
-
-
-                toggleSelection(rows) {
-                    if (rows) {
-                        rows.forEach(row => {
-                            this.$refs.multipleTable.toggleRowSelection(row);
-                        });
-                    } else {
-                        this.$refs.multipleTable.clearSelection();
-                    }
+                
+                // 执行修改数据
+                handleEdit(id) {
+                    // 保留this指向
+                    var _this = this;
+                    // 跳转到修改页面，把id传过去
+                    location.href = `./userEdit.html?id=${id}`
                 },
+
+                // 批量删除
+                selectDelete(){
+                    let _this = this;
+                    // 遍历选中的数据，得到id数组
+                    let idArr = this.multipleSelection.map(v => v.id);
+                    // 如果用户没用选中
+                    if (!idArr.length) {
+                        alert('请选择！！！');
+                        return false;
+                    }
+                    // 发送ajax请求
+                    $.post('/users/selectDel',{"idArr":idArr},function(data){
+                        if(data.errcode === 1){
+                            alert(data.msg);
+                            _this.getAllData()
+                        }else{
+                            alert(data.msg)
+                        }
+                    })  
+                },
+                
+                // 取消选中
+                deselectall() {
+                    this.$refs.multipleTable.clearSelection();
+                },
+                
+                // 勾选就会触发的函数
                 handleSelectionChange(val) {
+                    // 把勾选中的数据 赋值给 multipleSelection
                     this.multipleSelection = val;
+                    // console.log('勾选的时候，获取的值：', this.multipleSelection)
                 }
             },
             // 过滤器
-            filters:{
+            filters: {
                 // 过滤时间
-                formatCtime(value){
+                formatCtime(value) {
                     return moment(value).format("YYYY-MM-DD hh:mm:ss a")
                 }
             }

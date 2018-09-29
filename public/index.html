@@ -14,6 +14,8 @@
     <script src="./libs/vue/vue.min.js"></script>
     <!-- 引入element.min.js -->
     <script src="./libs/elementui/js/elementui.min.js"></script>
+    <!-- 检测是否登录 -->
+    <script src="/users/userLogin"></script>
 </head>
 
 <body>
@@ -25,7 +27,7 @@
                 <div class="title">
                     <h2>华联超市管理系统</h2>
                     <p>您好，admin</p>
-                    <p><a href="">管理首页</a>|<a href="">退出系统</a></p>
+                    <p><a href="">管理首页</a>|<a href="/users/logout">退出系统</a></p>
                 </div>
                 <!-- 左部页面导航 -->
                 <el-menu :unique-opened="true" :default-openeds="['8']" :default-active="'8-1'">
